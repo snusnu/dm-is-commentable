@@ -1,11 +1,12 @@
 h2. dm-is-commentable
 
-A DataMapper plugin that adds the ability to comment any model. It also allows for easy rating of comments.
+A DataMapper plugin that adds the ability to comment any model. 
+It WILL EVENTUALLY also allow for easy rating of comments.
 
 <pre>
 <code>
 # GEM_DEPENDENCIES = [
-#  ["dm-is-rateable", ">=0.9.4"],
+#  ["dm-is-rateable", ">=0.0.1"],
 # ]
   
 class User
@@ -22,10 +23,15 @@ class Trip
   #
   # class TripComment
   #   include DataMapper::Resource
+  #   
   #   property :id, Serial
+  #   
   #   property :trip_id, Integer, :nullable => false
   #   property :user_id, Integer, :nullable => false
   #   property :body,    Integer, :nullable => false
+  #
+  #   property :created_at, DateTime
+  #   property :updated_at, DateTime
   #
   #   belongs_to :user
   # end
@@ -38,7 +44,6 @@ class Trip
   #   :rateable => true, # or false, or Hash (all dm-is-rateable options)
   #   :commenter => { :fk => :user_id, :fk_type => Integer },
   #   :allow_deactivation => true,
-  #   :timestamps => true,
   #   :as => nil
   # }.merge(options)
   
