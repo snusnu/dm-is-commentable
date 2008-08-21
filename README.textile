@@ -1,0 +1,49 @@
+h2. dm-is-commentable
+
+A DataMapper plugin that adds the ability to comment any model. It also allows for easy rating of comments.
+
+<pre>
+<code>
+# GEM_DEPENDENCIES = [
+#  ["dm-is-rateable", ">=0.9.4"],
+# ]
+  
+class User
+  include DataMapper::Resource
+  property :id, Serial
+end
+
+class Trip
+
+  include DataMapper::Resource
+  property :id, Serial
+
+  # will define and thus auto_migrate! by using dm-is-remixable:
+  #
+  # class TripComment
+  #   include DataMapper::Resource
+  #   property :id, Serial
+  #   property :trip_id, Integer, :nullable => false
+  #   property :user_id, Integer, :nullable => false
+  #   property :body,    Integer, :nullable => false
+  #
+  #   belongs_to :user
+  # end
+  #
+  # allowing the following options:
+  #
+  # options = {
+  #   :comment_remixable => nil, # only enhance if this is nil
+  #   :anonymous => false,
+  #   :rateable => true, # or false, or Hash (all dm-is-rateable options)
+  #   :commenter => { :fk => :user_id, :fk_type => Integer },
+  #   :allow_deactivation => true,
+  #   :timestamps => true,
+  #   :as => nil
+  # }.merge(options)
+  
+  is :commentable #, options
+  
+end
+</code>
+</pre>

@@ -1,0 +1,12 @@
+History.txt
+LICENSE
+Manifest.txt
+README.textile
+Rakefile
+TODO
+lib/dm-is-commentable.rb
+lib/dm-is-commentable/is/commentable.rb
+lib/dm-is-commentable/is/version.rb
+spec/integration/commentable_spec.rb
+spec/spec.opts
+spec/spec_helper.rb
