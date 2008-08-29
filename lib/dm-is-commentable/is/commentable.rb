@@ -96,7 +96,7 @@ module DataMapper
           
           if rateable_commenting_togglable || @comments_rateable
             # pass all supported dm-is-rateable options
-            # is :rateable #, options[:rateable].is_a?(Hash) ? options[:rateable] : {}
+            is :rateable, options[:rateable].is_a?(Hash) ? options[:rateable] : {}
           end
         
         end

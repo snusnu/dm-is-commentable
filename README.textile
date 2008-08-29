@@ -1,9 +1,9 @@
 h2. dm-is-commentable
 
 A DataMapper plugin that adds the ability to comment any model. 
-It WILL EVENTUALLY also allow for easy rating of comments. For a deeper
-understanding on how it does it's thing, please consult the code itself,
-and of course the specs.
+It also allows for easy rating of comments by using dm-is-rateable.
+For a deeper understanding on how it does it's thing, please consult 
+the code itself, and of course the specs.
 
 <pre>
 <code>

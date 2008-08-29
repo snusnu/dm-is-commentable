@@ -60,6 +60,7 @@ if HAS_SQLITE3 || HAS_MYSQL || HAS_POSTGRES
     # clean model environments after each example run
     def unload_commenting_infrastructure(remixer_name, user_model_name = nil)
       Object.send :remove_const, "#{remixer_name}Comment" if Object.const_defined? "#{remixer_name}Comment"
+      Object.send :remove_const, "#{remixer_name}CommentRating" if Object.const_defined? "#{remixer_name}CommentRating"
       Object.send :remove_const, "#{remixer_name}" if Object.const_defined? "#{remixer_name}"
       Object.send :remove_const, "#{user_model_name}" if Object.const_defined? "#{user_model_name}" if user_model_name
     end
@@ -547,6 +548,7 @@ if HAS_SQLITE3 || HAS_MYSQL || HAS_POSTGRES
         User.auto_migrate!
         Trip.auto_migrate!
         TripComment.auto_migrate!
+        TripCommentRating.auto_migrate!
     
         repository do
           @u1 = User.create(:id => 1)
