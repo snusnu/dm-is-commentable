@@ -12,7 +12,7 @@ GEM_NAME = "dm-is-commentable"
 GEM_VERSION = DataMapper::Is::Commentable::VERSION
 
 GEM_DEPENDENCIES = [
-  ["dm-is-remixable", ">=0.9.4"],
+  ["dm-is-remixable", ">=0.9.5"],
   ["dm-is-rateable",  ">=0.0.1"]
 ]
 
