@@ -227,13 +227,13 @@ if HAS_SQLITE3 || HAS_MYSQL || HAS_POSTGRES
       end
     
       it "should allow to disable and reenable commenting" do
-        @t1.disable_commenting
+        @t1.disable_commenting!
         @t1.commenting_disabled?.should == true
         @t1.commenting_enabled?.should == false
         lambda { @t1.comment(SHORT_COMMENT, @u1) }.should raise_error(DataMapper::Is::Commentable::CommentingDisabled)
         @t1.comments.size.should == 0
         
-        @t1.enable_commenting
+        @t1.enable_commenting!
         @t1.commenting_enabled?.should == true
         @t1.commenting_disabled?.should == false
         lambda { @t1.comment(SHORT_COMMENT, @u1) }.should_not raise_error(DataMapper::Is::Commentable::CommentingDisabled)
@@ -249,11 +249,11 @@ if HAS_SQLITE3 || HAS_MYSQL || HAS_POSTGRES
       end
     
       it "should raise 'DataMapper::Is::Commentable::TogglableCommentingDisabled' when 'disable_comments' is called" do
-        lambda { @t1.disable_commenting }.should raise_error(DataMapper::Is::Commentable::TogglableCommentingDisabled)
+        lambda { @t1.disable_commenting! }.should raise_error(DataMapper::Is::Commentable::TogglableCommentingDisabled)
       end
           
       it "should raise 'DataMapper::Is::Commentable::TogglableCommentingDisabled' when 'enable_comments' is called" do
-        lambda { @t1.enable_commenting }.should raise_error(DataMapper::Is::Commentable::TogglableCommentingDisabled)
+        lambda { @t1.enable_commenting! }.should raise_error(DataMapper::Is::Commentable::TogglableCommentingDisabled)
       end
     
     end
@@ -269,13 +269,13 @@ if HAS_SQLITE3 || HAS_MYSQL || HAS_POSTGRES
       end
       
       it "should allow to disable and reenable anonymous commenting" do
-        @t1.disable_anonymous_commenting
+        @t1.disable_anonymous_commenting!
         @t1.anonymous_commenting_disabled?.should == true
         @t1.anonymous_commenting_enabled?.should == false
         lambda { @t1.comment(SHORT_COMMENT) }.should raise_error(DataMapper::Is::Commentable::AnonymousCommentingDisabled)
         @t1.comments.size.should == 0
         
-        @t1.enable_anonymous_commenting
+        @t1.enable_anonymous_commenting!
         @t1.anonymous_commenting_enabled?.should == true
         @t1.anonymous_commenting_disabled?.should == false
         lambda { @t1.comment(SHORT_COMMENT) }.should_not raise_error(DataMapper::Is::Commentable::AnonymousCommentingDisabled)
@@ -291,8 +291,8 @@ if HAS_SQLITE3 || HAS_MYSQL || HAS_POSTGRES
       end
       
       it "should not allow to disable and reenable anonymous commenting" do
-        lambda { @t1.disable_anonymous_commenting }.should raise_error(DataMapper::Is::Commentable::TogglableAnonymousCommentingDisabled)
-        lambda { @t1.enable_anonymous_commenting  }.should raise_error(DataMapper::Is::Commentable::TogglableAnonymousCommentingDisabled)
+        lambda { @t1.disable_anonymous_commenting! }.should raise_error(DataMapper::Is::Commentable::TogglableAnonymousCommentingDisabled)
+        lambda { @t1.enable_anonymous_commenting!  }.should raise_error(DataMapper::Is::Commentable::TogglableAnonymousCommentingDisabled)
       end
       
     end

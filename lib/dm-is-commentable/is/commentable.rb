@@ -5,10 +5,8 @@ module DataMapper
       class DmIsCommentableException < Exception; end
       
       class InvalidComment < DmIsCommentableException; end
-      
       class CommentingDisabled < DmIsCommentableException; end
       class AnonymousCommentingDisabled < DmIsCommentableException; end
-      
       class TogglableCommentingDisabled < DmIsCommentableException; end
       class TogglableAnonymousCommentingDisabled < DmIsCommentableException; end
       
@@ -27,35 +25,47 @@ module DataMapper
         property :updated_at, DateTime
         
       end
-
+      
+      
+      # Options for generated remixable:
+      #
+      # Use :name and :type to name the fk property and give it a type.
+      # Pass all other options on to the 'property' call.
+      # 
+      # :commenter => { :name => :user_id, :type => Integer }, 
+      #
+      # Use :type to change the type of the comment body property.
+      # Pass all other options on to the 'property' call.
+      # 
+      # :body      => { :type => Text },
+      #
+      # Set this to true to make all comments rateable (but not togglable)
+      # If 'property :rateable_commenting_enabled' is defined on this model,
+      # it will take precedence over the option defined here.
+      # Alternatively, you can also pass all options supported by dm-is-rateable.
+      # 
+      # :rateable  => false,
+      #
+      # Options for remixer:
+      #
+      # Set the specified alias (Symbol) on the 'comments' association
+      #
+      # :as        => nil
       def is_commentable(options = {})
         
         extend  DataMapper::Is::Commentable::ClassMethods
         include DataMapper::Is::Commentable::InstanceMethods
         
         options = {
-          # Options for generated remixable
-          # -------------------------------
-          # Use :name and :type to name the fk property and give it a type
-          # Pass all other options on to the 'property' call
-          :commenter => { :name => :user_id, :type => Integer, :nullable => false }, 
-          # Use :type to change the type of the comment body property
-          # Pass all other options on to the 'property' call
+          :commenter => { :name => :user_id, :type => Integer },
           :body      => { :type => DataMapper::Types::Text, :nullable => false },
-          # Set this to true to make all comments rateable (but not togglable)
-          # If 'property :rateable_commenting_enabled' is defined on this model,
-          # it will take precedence over the option defined here.
-          # Alternatively, you can also pass all options supported by dm-is-rateable
           :rateable  => false,
-          # Options for remixer
-          # -------------------
-          # Set the specified alias (Symbol) on the 'comments' association
           :as        => nil
         }.merge(options)
         
+        # allow non togglable ratings
         @comments_rateable = options[:rateable]
         
-        # use dm-is-remixable for storage and api
         remix n, Comment, :as => options[:as]
         
         @remixed_comment = remixables[:comment]
@@ -80,7 +90,7 @@ module DataMapper
         b_type = b_opts.is_a?(Hash) ? (b_opts.delete(:type) || DataMapper::Types::Text)  : DataMapper::Types::Text
         b_property_opts = b_opts.is_a?(Hash) ? b_opts : { :nullable => false }
 
-        # block for enhance gets class evaled in remixable scope
+        # block for enhance gets class_eval'ed in remixable scope
         commenting_rateable = self.commenting_rateable?
         
         enhance :comment do
@@ -91,7 +101,6 @@ module DataMapper
           belongs_to c_association
           
           if commenting_rateable
-            # pass all supported dm-is-rateable options
             is :rateable, options[:rateable].is_a?(Hash) ? options[:rateable] : {}
           end
         
@@ -112,7 +121,6 @@ module DataMapper
         def rateable_commenting_togglable?
           self.properties.has_property? :rateable_commenting_enabled
         end
-        
         
         def commenting_rateable?
           rateable_commenting_togglable? || @comments_rateable
@@ -168,7 +176,7 @@ module DataMapper
         end
         
         
-        def disable_commenting
+        def disable_commenting!
           if self.commenting_togglable?
             if attribute_get(:commenting_enabled)
               self.update_attributes(:commenting_enabled => false)
@@ -178,7 +186,7 @@ module DataMapper
           end
         end
         
-        def enable_commenting
+        def enable_commenting!
           if self.commenting_togglable?
             unless attribute_get(:commenting_enabled)
               self.update_attributes(:commenting_enabled => true)
@@ -189,7 +197,7 @@ module DataMapper
         end
         
         
-        def disable_anonymous_commenting
+        def disable_anonymous_commenting!
           if self.anonymous_commenting_togglable?
             if attribute_get(:anonymous_commenting_enabled)
               self.update_attributes(:anonymous_commenting_enabled => false)
@@ -199,7 +207,7 @@ module DataMapper
           end
         end
         
-        def enable_anonymous_commenting
+        def enable_anonymous_commenting!
           if self.anonymous_commenting_togglable?
             unless attribute_get(:anonymous_commenting_enabled)
               self.update_attributes(:anonymous_commenting_enabled => true)
