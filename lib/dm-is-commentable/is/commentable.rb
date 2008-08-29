@@ -49,8 +49,8 @@ module DataMapper
       # :as        => nil
       def is_commentable(options = {})
         
-        extend  DataMapper::Is::Commentable::ClassMethods
-        include DataMapper::Is::Commentable::InstanceMethods
+        extend  ClassMethods
+        include InstanceMethods
         
         options = {
           :commenter => { :name => :user_id, :type => Integer },
@@ -83,7 +83,7 @@ module DataMapper
 
         b_opts = options[:body]
         b_name = b_opts.is_a?(Hash) ? (b_opts.delete(:name) || :body) : :body
-        b_type = b_opts.is_a?(Hash) ? (b_opts.delete(:type) || Text)  : Text
+        b_type = b_opts.is_a?(Hash) ? (b_opts.delete(:type) || DataMapper::Types::Text) : DataMapper::Types::Text
         b_property_opts = b_opts.is_a?(Hash) ? b_opts : { :nullable => false }
 
         # block for enhance gets class_eval'ed in remixable scope
