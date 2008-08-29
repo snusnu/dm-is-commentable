@@ -117,6 +117,12 @@ if HAS_SQLITE3 || HAS_MYSQL || HAS_POSTGRES
       it "should respond_to?(:user_comments)" do
         @t1.respond_to?(:user_comments).should be_true
       end
+            
+      it "should allow to pass conditions into the :user_comments method" do
+        @t1.comment SHORT_COMMENT, @u1
+        @t1.user_comments(@u1, :body.like => "%no%").should be_empty
+        @t1.user_comments(@u1, :body.like => "%yes%").should_not be_empty
+      end
       
       
       it "should respond_to?(:commenting_togglable?)" do

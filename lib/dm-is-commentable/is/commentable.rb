@@ -228,8 +228,8 @@ module DataMapper
           end
         end
         
-        def user_comments(user)
-          self.comments :user_id => user.id
+        def user_comments(user, conditions = {})
+          self.comments conditions.merge(:user_id => user.id)
         end
         
         private
