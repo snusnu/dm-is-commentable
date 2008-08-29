@@ -297,6 +297,11 @@ if HAS_SQLITE3 || HAS_MYSQL || HAS_POSTGRES
         @t1.anonymous_commenting_togglable?.should be_false
       end
       
+      it "should not allow to disable and reenable anonymous commenting" do
+        lambda { @t1.disable_anonymous_commenting }.should raise_error(DataMapper::Is::Commentable::TogglableAnonymousCommentingDisabled)
+        lambda { @t1.enable_anonymous_commenting  }.should raise_error(DataMapper::Is::Commentable::TogglableAnonymousCommentingDisabled)
+      end
+      
     end
 
     # --------------------------------------------------------------------------------------------------
@@ -401,6 +406,10 @@ if HAS_SQLITE3 || HAS_MYSQL || HAS_POSTGRES
       it "should return true when 'rateable_commenting_enabled?' is called" do
         @t1.rateable_commenting_enabled?.should be_true
       end
+      
+      it "should return false when 'rateable_commenting_disabled?' is called" do
+        @t1.rateable_commenting_disabled?.should be_false
+      end
 
     end
 
@@ -408,6 +417,10 @@ if HAS_SQLITE3 || HAS_MYSQL || HAS_POSTGRES
 
       it "should return false when 'rateable_commenting_enabled?' is called" do
         @t1.rateable_commenting_enabled?.should be_false
+      end
+      
+      it "should return true when 'rateable_commenting_disabled?' is called" do
+        @t1.rateable_commenting_disabled?.should be_true
       end
 
     end
