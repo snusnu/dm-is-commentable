@@ -1,14 +1,22 @@
 h2. dm-is-commentable
 
 A DataMapper plugin that adds the ability to comment any model. 
-It WILL EVENTUALLY also allow for easy rating of comments.
+It WILL EVENTUALLY also allow for easy rating of comments. For a deeper
+understanding on how it does it's thing, please consult the code itself,
+and of course the specs.
 
 <pre>
 <code>
-# GEM_DEPENDENCIES = [
-#  ["dm-is-rateable", ">=0.0.1"],
-# ]
-  
+# DEPENDENCIES (taken from dm-is-commentable.rb)
+
+# require 'dm-core'
+# require 'dm-types'
+# require 'dm-timestamps'
+# require 'dm-validations'
+# require 'dm-aggregates'
+# require 'dm-is-remixable'
+# require 'dm-is-rateable'
+
 class User
   include DataMapper::Resource
   property :id, Serial
@@ -17,9 +25,46 @@ end
 class Trip
 
   include DataMapper::Resource
+  
   property :id, Serial
+  
+  # Customization via properties
+  #
+  # add these properties if you wish to be able to toggle some behaviour.
+  # dm-is-commentable will recognize these properties and behave accordingly
+  # you can use any combination of these properties, or all, or none of them
+  # Currently you MUST name these properties like this, but this will likely
+  # change in the near future.
+  #
+  # property :commenting_enabled,           Boolean #, :nullable => false, :default => true
+  # property :anonymous_commenting_enabled, Boolean #, :nullable => false, :default => true
+  # property :rateable_commenting_enabled,  Boolean #, :nullable => false, :default => true
 
-  # will define and thus auto_migrate! by using dm-is-remixable:
+  # Customization via options:
+  #
+  # options = {
+  #   # Options for generated remixable
+  #   # -------------------------------
+  #   # Use :name and :type to name the fk property and give it a type
+  #   # Pass all other options on to the 'property' call
+  #   :commenter => { :name => :user_id, :type => Integer, :nullable => false }, 
+  #   # Use :type to change the type of the comment body property
+  #   # Pass all other options on to the 'property' call
+  #   :body      => { :type => DataMapper::Types::Text, :nullable => false },
+  #   # Set this to true to make all comments rateable (but not togglable)
+  #   # If 'property :rateable_commenting_enabled' is defined on this model,
+  #   # it will take precedence over the option defined here.
+  #   # Alternatively, you can also pass all options supported by dm-is-rateable
+  #   :rateable  => false,
+  #   # Options for remixer
+  #   # -------------------
+  #   # Set the specified alias (Symbol) on the 'comments' association
+  #   :as        => nil
+  # }.merge(options)
+  
+  is :commentable #, options
+
+  # will define and thus be able to auto_migrate! by using dm-is-remixable:
   #
   # class TripComment
   #   include DataMapper::Resource
@@ -28,26 +73,14 @@ class Trip
   #   
   #   property :trip_id, Integer, :nullable => false
   #   property :user_id, Integer, :nullable => false
-  #   property :body,    Integer, :nullable => false
+  #   property :body,    Text,    :nullable => false
   #
   #   property :created_at, DateTime
   #   property :updated_at, DateTime
   #
+  #   belongs_to :trip
   #   belongs_to :user
   # end
-  #
-  # allowing the following options:
-  #
-  # options = {
-  #   :comment_remixable => nil, # only enhance if this is nil
-  #   :anonymous => false,
-  #   :rateable => true, # or false, or Hash (all dm-is-rateable options)
-  #   :commenter => { :fk => :user_id, :fk_type => Integer },
-  #   :allow_deactivation => true,
-  #   :as => nil
-  # }.merge(options)
-  
-  is :commentable #, options
   
 end
 </code>

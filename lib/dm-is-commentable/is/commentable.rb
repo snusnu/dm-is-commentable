@@ -34,11 +34,22 @@ module DataMapper
         include DataMapper::Is::Commentable::InstanceMethods
         
         options = {
-          # options for generated remixable
+          # Options for generated remixable
+          # -------------------------------
+          # Use :name and :type to name the fk property and give it a type
+          # Pass all other options on to the 'property' call
           :commenter => { :name => :user_id, :type => Integer, :nullable => false }, 
+          # Use :type to change the type of the comment body property
+          # Pass all other options on to the 'property' call
           :body      => { :type => DataMapper::Types::Text, :nullable => false },
+          # Set this to true to make all comments rateable (but not togglable)
+          # If 'property :rateable_commenting_enabled' is defined on this model,
+          # it will take precedence over the option defined here.
+          # Alternatively, you can also pass all options supported by dm-is-rateable
           :rateable  => false,
-          # options for remixer
+          # Options for remixer
+          # -------------------
+          # Set the specified alias (Symbol) on the 'comments' association
           :as        => nil
         }.merge(options)
         
