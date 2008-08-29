@@ -55,14 +55,10 @@ module DataMapper
         
         @comments_rateable = options[:rateable]
         
-        @comment_remixable = DataMapper::Is::Commentable::Comment
-        class_inheritable_reader :comment_remixable
-        
         # use dm-is-remixable for storage and api
-        remix n, @comment_remixable, :as => options[:as]
+        remix n, Comment, :as => options[:as]
         
-        remixables_key = Extlib::Inflection.demodulize(@comment_remixable.name).snake_case.to_sym
-        @remixed_comment = remixables[remixables_key]
+        @remixed_comment = remixables[:comment]
         class_inheritable_reader :remixed_comment
 
         self.class_eval(<<-EOS, __FILE__, __LINE__ + 1)
@@ -85,7 +81,7 @@ module DataMapper
         b_property_opts = b_opts.is_a?(Hash) ? b_opts : { :nullable => false }
 
         # block for enhance gets class evaled in remixable scope
-        rateable_commenting_togglable = self.rateable_commenting_togglable?
+        commenting_rateable = self.commenting_rateable?
         
         enhance :comment do
           
@@ -94,7 +90,7 @@ module DataMapper
           
           belongs_to c_association
           
-          if rateable_commenting_togglable || @comments_rateable
+          if commenting_rateable
             # pass all supported dm-is-rateable options
             is :rateable, options[:rateable].is_a?(Hash) ? options[:rateable] : {}
           end
@@ -104,12 +100,6 @@ module DataMapper
       end
 
       module ClassMethods
-        
-        def commentable_fk
-          demodulized_name = Extlib::Inflection.demodulize(self.name)
-          Extlib::Inflection.foreign_key(demodulized_name).to_sym
-        end
-        
                 
         def commenting_togglable?
           self.properties.has_property? :commenting_enabled
@@ -243,7 +233,7 @@ module DataMapper
         end
         
         private
-
+        
         def raise_if_invalid_comment!(body, user)
           raise_unless_valid_commenting_user!(user)
           raise_unless_valid_comment_body!(body)
@@ -255,8 +245,8 @@ module DataMapper
         end
                 
         def raise_unless_valid_commenting_user!(user)
-          msg = "Comments must have at least one character"
-          raise AnonymousCommentingDisabled unless valid_commenting_user?(user)
+          msg = "Anonymous Commenting is not enabled for #{self}"
+          raise AnonymousCommentingDisabled, msg unless valid_commenting_user?(user)
         end
         
       end

@@ -83,15 +83,6 @@ if HAS_SQLITE3 || HAS_MYSQL || HAS_POSTGRES
       end
       
       
-      it "should define a 'commentable_fk' class_level reader on the remixing model" do
-        Trip.respond_to?(:commentable_fk).should be_true
-      end
-
-      it "should define a 'comment_remixable' class_level reader on the remixing model" do
-        Trip.respond_to?(:comment_remixable).should be_true
-        Trip.comment_remixable.should == DataMapper::Is::Commentable::Comment
-      end
-      
       it "should define a 'remixed_comment' class_level reader on the remixing model" do
         Trip.respond_to?(:remixed_comment).should be_true
         Trip.remixed_comment[:model].should == TripComment
@@ -107,11 +98,6 @@ if HAS_SQLITE3 || HAS_MYSQL || HAS_POSTGRES
             
       it "should define a 'rateable_commenting_togglable?' class_level reader on the remixing model" do
         Trip.respond_to?(:rateable_commenting_togglable?).should be_true
-      end
-      
-       
-      it "should use DataMapper foreign_key naming conventions for naming the 'commentable_fk' in the remixing model" do
-        Trip.commentable_fk.should == :trip_id
       end
 
 
