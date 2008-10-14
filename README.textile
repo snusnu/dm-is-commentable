@@ -91,8 +91,9 @@ h3. dm-is-remixable
 The actual reason why I chose <code>dm-is-remixable</code> (over some kind of polymorphic associations) 
 is because I actually don’t like polymorphic relationships that much! Call me old fashioned 
 but I like my tables with proper referential integrity all setup, and I don’t like 
-to store the same 5 strings a million times. Maybe one could refactor <code>STI</code> to use a type_id column instead, 
-but this would probably be overkill – so denormalization is ok there I guess.
+to store the same 5 strings a million times. Maybe one could refactor <code>STI</code> to use a type_id column instead
+of storing the same String over and over, maybe denormalization is fine here too, I don't know.
+Anyways, this wouldn't change the actual problem with referential integrity.
 
 I also really don’t see any problem with the <em>“pure relational”</em> approach that <code>dm-is-remixable</code> follows. 
 You don’t get to see all those boring join models in you <code>app/models</code> directory, still they get stored 
@@ -129,3 +130,4 @@ because then even I would have the feeling that there’s too many tables :-)
 
 Again, this is a usecase I can imagine, but I guess that’s a rather “uncommon” one. 
 Nevertheless, a dm commenting plugin that would use polymorphic associations would easily scratch that itch!
+Possibly, more pure relational approaches also exist to solve this kind of problem? Think about it if you need it!
