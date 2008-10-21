@@ -23,7 +23,7 @@ PROJECT_NAME = "datamapper"
 PROJECT_URL  = "http://github.com/snusnu/dm-is-commentable/tree/master"
 PROJECT_DESCRIPTION = PROJECT_SUMMARY = "DataMapper plugin that adds the possibility to comment models."
 
-require ROOT.parent + 'tasks/hoe'
+require ROOT + 'tasks/hoe'
 
 task :default => [ :spec ]
 
