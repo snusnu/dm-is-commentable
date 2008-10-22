@@ -59,7 +59,9 @@ class Trip
   #   # Options for remixer
   #   # -------------------
   #   # Set the specified alias (Symbol) on the 'comments' association
-  #   :as        => nil
+  #   :as         => nil,
+  #   # class_name to use for the generated remixed model
+  #   :class_name => "#{self}Comment"
   # }.merge(options)
   
   is :commentable #, options

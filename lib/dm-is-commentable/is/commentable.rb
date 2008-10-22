@@ -53,22 +53,29 @@ module DataMapper
         include InstanceMethods
         
         options = {
-          :commenter => { :name => :user_id, :type => Integer },
-          :body      => { :type => DataMapper::Types::Text, :nullable => false },
-          :rateable  => false,
-          :as        => nil
+          :commenter  => { :name => :user_id, :type => Integer },
+          :body       => { :type => DataMapper::Types::Text, :nullable => false },
+          :rateable   => false,
+          :as         => nil,
+          :class_name => "#{self}Comment"
         }.merge(options)
         
         # allow non togglable ratings
         @comments_rateable = options[:rateable]
         
-        remix n, Comment, :as => options[:as]
+        @commentable_class_name = options[:class_name]        
+        class_inheritable_accessor :commentable_class_name        
+        
+        @commentable_key = @commentable_class_name.snake_case.to_sym     
+        class_inheritable_accessor :commentable_key
+        
+        remix n, Comment, :as => options[:as], :class_name => @commentable_class_name
         
         @remixed_comment = remixables[:comment]
         class_inheritable_reader :remixed_comment
 
         self.class_eval(<<-EOS, __FILE__, __LINE__ + 1)
-          alias :comments #{@remixed_comment[:reader]}
+          alias :comments #{@remixed_comment[commentable_key][:reader]}
         EOS
 
         def commenter_fk(name)
@@ -89,7 +96,7 @@ module DataMapper
         # block for enhance gets class_eval'ed in remixable scope
         commenting_rateable = self.commenting_rateable?
         
-        enhance :comment do
+        enhance :comment, @commentable_class_name do
           
           property c_name, c_type, c_property_opts # commenter
           property b_name, b_type, b_property_opts # body

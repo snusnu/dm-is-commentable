@@ -82,10 +82,19 @@ if HAS_SQLITE3 || HAS_MYSQL || HAS_POSTGRES
         lambda { TripComment.auto_migrate! }.should_not raise_error
       end
       
+      it "should define a 'commentable_class_name' class_level reader on the remixing model" do
+        Trip.respond_to?(:commentable_class_name).should be_true
+        Trip.commentable_class_name.should == "TripComment"
+      end
+                  
+      it "should define a 'commentable_key' class_level reader on the remixing model" do
+        Trip.respond_to?(:commentable_key).should be_true
+        Trip.commentable_key.should == :trip_comment
+      end
       
       it "should define a 'remixed_comment' class_level reader on the remixing model" do
         Trip.respond_to?(:remixed_comment).should be_true
-        Trip.remixed_comment[:model].should == TripComment
+        Trip.remixed_comment[Trip.commentable_key][:model].should == TripComment
       end
       
       it "should define a 'commenting_togglable?' class_level reader on the remixing model" do
@@ -182,8 +191,8 @@ if HAS_SQLITE3 || HAS_MYSQL || HAS_POSTGRES
 
       it "should set the specified alias on the 'comments' reader" do
         @t1.respond_to?(:my_trip_comments).should be_true
-        Trip.remixed_comment[:reader].should == :my_trip_comments
-        Trip.remixed_comment[:writer].should == :my_trip_comments=
+        Trip.remixed_comment[Trip.commentable_key][:reader].should == :my_trip_comments
+        Trip.remixed_comment[Trip.commentable_key][:writer].should == :my_trip_comments=
       end
 
     end
@@ -192,8 +201,8 @@ if HAS_SQLITE3 || HAS_MYSQL || HAS_POSTGRES
 
       it "should set the specified alias on the 'comments' reader" do
         @t1.respond_to?(:trip_comments).should be_true
-        Trip.remixed_comment[:reader].should == :trip_comments
-        Trip.remixed_comment[:writer].should == :trip_comments=
+        Trip.remixed_comment[Trip.commentable_key][:reader].should == :trip_comments
+        Trip.remixed_comment[Trip.commentable_key][:writer].should == :trip_comments=
       end
 
     end
