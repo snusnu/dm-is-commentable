@@ -76,6 +76,11 @@ if HAS_SQLITE3 || HAS_MYSQL || HAS_POSTGRES
   
     describe "every commentable", :shared => true do
 
+      it "should return class of comments model" do
+        Trip.new.respond_to?(:commentable_class).should be_true
+        Trip.new.commentable_class.should == TripComment
+      end
+
       it "should define a remixed model that can be auto_migrated" do
         # once it's migrated it stays in the database and can be used by the other specs
         Object.const_defined?("TripComment").should be_true

@@ -132,6 +132,10 @@ module DataMapper
       end
   
       module InstanceMethods
+
+        def commentable_class
+          Kernel.const_get(self.commentable_class_name)
+        end
         
         def commenting_rateable?
           self.class.commenting_rateable?
