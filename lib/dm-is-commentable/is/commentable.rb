@@ -57,19 +57,19 @@ module DataMapper
           :body       => { :type => DataMapper::Types::Text, :nullable => false },
           :rateable   => false,
           :as         => nil,
-          :class_name => "#{self}Comment"
+          :model => "#{self}Comment"
         }.merge(options)
         
         # allow non togglable ratings
         @comments_rateable = options[:rateable]
         
-        @commentable_class_name = options[:class_name]        
+        @commentable_class_name = options[:model]        
         class_inheritable_accessor :commentable_class_name        
         
         @commentable_key = @commentable_class_name.snake_case.to_sym     
         class_inheritable_accessor :commentable_key
         
-        remix n, Comment, :as => options[:as], :class_name => @commentable_class_name
+        remix n, Comment, :as => options[:as], :model => @commentable_class_name
         
         @remixed_comment = remixables[:comment]
         class_inheritable_reader :remixed_comment
@@ -114,15 +114,15 @@ module DataMapper
       module ClassMethods
                 
         def commenting_togglable?
-          self.properties.has_property? :commenting_enabled
+          self.properties.named? :commenting_enabled
         end
                 
         def anonymous_commenting_togglable?
-          self.properties.has_property? :anonymous_commenting_enabled
+          self.properties.named? :anonymous_commenting_enabled
         end
         
         def rateable_commenting_togglable?
-          self.properties.has_property? :rateable_commenting_enabled
+          self.properties.named? :rateable_commenting_enabled
         end
         
         def commenting_rateable?
@@ -186,7 +186,7 @@ module DataMapper
         def disable_commenting!
           if self.commenting_togglable?
             if attribute_get(:commenting_enabled)
-              self.update_attributes(:commenting_enabled => false)
+              self.update(:commenting_enabled => false)
             end
           else
             raise TogglableCommentingDisabled, "Commenting cannot be toggled for #{self}"
@@ -196,7 +196,7 @@ module DataMapper
         def enable_commenting!
           if self.commenting_togglable?
             unless attribute_get(:commenting_enabled)
-              self.update_attributes(:commenting_enabled => true)
+              self.update(:commenting_enabled => true)
             end
           else
             raise TogglableCommentingDisabled, "Commenting cannot be toggled for #{self}"
@@ -207,7 +207,7 @@ module DataMapper
         def disable_anonymous_commenting!
           if self.anonymous_commenting_togglable?
             if attribute_get(:anonymous_commenting_enabled)
-              self.update_attributes(:anonymous_commenting_enabled => false)
+              self.update(:anonymous_commenting_enabled => false)
             end
           else
             raise TogglableAnonymousCommentingDisabled, "Anonymous Commenting cannot be toggled for #{self}"
@@ -217,7 +217,7 @@ module DataMapper
         def enable_anonymous_commenting!
           if self.anonymous_commenting_togglable?
             unless attribute_get(:anonymous_commenting_enabled)
-              self.update_attributes(:anonymous_commenting_enabled => true)
+              self.update(:anonymous_commenting_enabled => true)
             end
           else
             raise TogglableAnonymousCommentingDisabled, "Anonymous Commenting cannot be toggled for #{self}"
