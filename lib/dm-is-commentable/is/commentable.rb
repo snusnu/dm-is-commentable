@@ -16,7 +16,7 @@ module DataMapper
 
         is :remixable
 
-        property :id, Integer, :serial => true
+        property :id, Serial
         property :created_at, DateTime
         property :updated_at, DateTime
         
