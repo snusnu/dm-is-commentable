@@ -86,6 +86,7 @@ module DataMapper
         c_name = c_opts.is_a?(Hash) ? (c_opts.delete(:name) || :user_id) : commenter_fk(c_opts)
         c_type = c_opts.is_a?(Hash) ? (c_opts.delete(:type) || Integer)  : Integer
         c_property_opts = c_opts.is_a?(Hash) ? c_opts : { :nullable => false }
+        c_property_opts.merge!(:min => 0) if c_type == Integer # Match referenced column type
         c_association = c_name.to_s.gsub(/_id/, '').to_sym
 
         b_opts = options[:body]
