@@ -63,23 +63,23 @@ module DataMapper
         # allow non togglable ratings
         @comments_rateable = options[:rateable]
         
-        @commentable_class_name = options[:model]        
-        class_inheritable_accessor :commentable_class_name        
+        class_attribute :commentable_class_name
+        commentable_class_name = options[:model]
         
-        @commentable_key = @commentable_class_name.snake_case.to_sym     
-        class_inheritable_accessor :commentable_key
+        class_attribute :commentable_key
+        commentable_key = commentable_class_name.underscore.to_sym
         
-        remix n, Comment, :as => options[:as], :model => @commentable_class_name
+        remix n, Comment, :as => options[:as], :model => commentable_class_name
         
-        @remixed_comment = remixables[:comment]
-        class_inheritable_reader :remixed_comment
+        class_attribute :remixed_comment
+        remixed_comment = remixables[:comment]
 
         self.class_eval(<<-EOS, __FILE__, __LINE__ + 1)
-          alias :comments #{@remixed_comment[commentable_key][:reader]}
+          alias :comments #{remixed_comment[commentable_key][:reader]}
         EOS
 
         def commenter_fk(name)
-          name ? Extlib::Inflection.foreign_key(name.to_s.singular).to_sym : :user_id
+          name ? ActiveSupport::Inflector.foreign_key(name.to_s.singular).to_sym : :user_id
         end
       
         c_opts = options[:commenter]
@@ -97,7 +97,7 @@ module DataMapper
         # block for enhance gets class_eval'ed in remixable scope
         commenting_rateable = self.commenting_rateable?
         
-        enhance :comment, @commentable_class_name do
+        enhance :comment, commentable_class_name do
           
           property c_name, c_type, c_property_opts # commenter
           property b_name, b_type, b_property_opts # body
