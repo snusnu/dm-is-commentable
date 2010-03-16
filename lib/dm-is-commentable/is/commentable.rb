@@ -54,7 +54,7 @@ module DataMapper
         
         options = {
           :commenter  => { :name => :user_id, :type => Integer },
-          :body       => { :type => DataMapper::Types::Text, :nullable => false },
+          :body       => { :type => DataMapper::Types::Text, :required => true },
           :rateable   => false,
           :as         => nil,
           :model => "#{self}Comment"
@@ -85,14 +85,14 @@ module DataMapper
         c_opts = options[:commenter]
         c_name = c_opts.is_a?(Hash) ? (c_opts.delete(:name) || :user_id) : commenter_fk(c_opts)
         c_type = c_opts.is_a?(Hash) ? (c_opts.delete(:type) || Integer)  : Integer
-        c_property_opts = c_opts.is_a?(Hash) ? c_opts : { :nullable => false }
+        c_property_opts = c_opts.is_a?(Hash) ? c_opts : { :required => true }
         c_property_opts.merge!(:min => 0) if c_type == Integer # Match referenced column type
         c_association = c_name.to_s.gsub(/_id/, '').to_sym
 
         b_opts = options[:body]
         b_name = b_opts.is_a?(Hash) ? (b_opts.delete(:name) || :body) : :body
         b_type = b_opts.is_a?(Hash) ? (b_opts.delete(:type) || DataMapper::Types::Text) : DataMapper::Types::Text
-        b_property_opts = b_opts.is_a?(Hash) ? b_opts : { :nullable => false }
+        b_property_opts = b_opts.is_a?(Hash) ? b_opts : { :required => true }
 
         # block for enhance gets class_eval'ed in remixable scope
         commenting_rateable = self.commenting_rateable?
