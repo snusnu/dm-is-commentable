@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Martin Gamsjaeger (snusnu)"]
-  s.date = %q{2010-03-15}
+  s.date = %q{2010-03-16}
   s.description = %q{Manage comments in your datamapper applications}
   s.email = %q{gamsnjaga@gmail.com}
   s.extra_rdoc_files = [
@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
   ]
   s.files = [
     ".gitignore",
+     "Gemfile",
      "History.txt",
      "LICENSE",
      "Manifest.txt",
@@ -26,6 +27,7 @@ Gem::Specification.new do |s|
      "Rakefile",
      "TODO",
      "VERSION",
+     "dm-is-commentable.gemspec",
      "lib/dm-is-commentable.rb",
      "lib/dm-is-commentable/is/commentable.rb",
      "lib/dm-is-commentable/is/version.rb",
